@@ -7,7 +7,7 @@ import com.myapp.ccd.model.Product;
 public class DiscountService extends RewardService {
 
 	private double percentage;
-	
+
 	public double getPercentage() {
 		return percentage;
 	}
@@ -16,10 +16,29 @@ public class DiscountService extends RewardService {
 		this.percentage = percentage;
 	}
 
+	public double calculateTotal(List<Product> list) {
+		double sum = 0;
+		if (list != null) {
+			list.stream().mapToDouble(Product::getPrice).sum();
+
+		}
+
+		return sum;
+	}
+
 	@Override
 	public RewardInformation applyReward(List<Product> order, long customerPoints) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		RewardInformation rewardInfo = new RewardInformation();
+		double ordertotal;
+		if(customerPoints>=requiredPoints) {
+			ordertotal=calculateTotal(order);
+			double discount=ordertotal*percentage;
+			rewardInfo.setDiscount(discount);
+		}
+		
+		return  rewardInfo;
 	}
 
 }
